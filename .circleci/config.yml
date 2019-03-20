@@ -7,8 +7,8 @@ version: 2
 
 defaults: &defaults
   environment:
-    DOCKER_IMAGE_NAME: apigeeks/mongodump-s3-docker
-    
+    DOCKER_IMAGE_NAME: apigeeks/mongodump-s3
+
   working_directory: ~/repo
   docker:
     - image: circleci/node:10
@@ -18,14 +18,14 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      
+
       - setup_remote_docker
 
       - run:
           command: |
             mkdir docker-cache/
-            
-            
+
+
             if [[ -z "$CIRCLE_BUILD_NUM" ]]; then                            
               sudo docker build -t $DOCKER_IMAGE_NAME:latest .
               sudo docker save -o docker-cache/image.tar $DOCKER_IMAGE_NAME:latest
@@ -37,17 +37,17 @@ jobs:
           key: docker-cache-{{ .Branch }}-{{ .Revision }}
           paths:
             - docker-cache
-  
+
   deploy:
     <<: *defaults
     steps:
       - restore_cache:
           keys:
             - docker-cache-{{ .Branch }}-{{ .Revision }}
-      
+
       - setup_remote_docker
 
-      - run: 
+      - run:
           command: |
             if [[ -z "$CIRCLE_BUILD_NUM" ]]; then                            
               sudo docker load < docker-cache/image.tar

@@ -11,5 +11,5 @@ mongodump -v --uri ${MONGO_URI} --archive --gzip | aws s3 cp - s3://${S3_BUCKET}
 
 echo "Backup up FINISHED"
 
-echo "Update latest.txt file with latest version of dump"
+echo "Update latest-mongo-dump-version.txt file with latest version of dump"
 echo ${BACKUP_NAME} | aws s3 cp - s3://${S3_BUCKET}/latest-mongo-dump-version.txt

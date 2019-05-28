@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3.8.4
 
 RUN apk --update add python py-pip zip groff less bash curl git && \
     pip install -U awscli && \
